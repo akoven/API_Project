@@ -1,15 +1,15 @@
 const express = require("express");
 const morgan = require("morgan");
-const { environment } = require('./config');
+const { environment } = require("./config");
 const app = express();
 
-const indexRouter = require('./routes/index');
-const tweetsRouter = require('./routes/tweets');
+const indexRouter = require("./routes/index");
+const tweetsRouter = require("./routes/tweets");
 
 app.use(morgan("dev"));
 app.use(express.json());
 
-app.use('/tweets',tweetsRouter);
+app.use("/tweets", tweetsRouter);
 app.use(indexRouter);
 
 // Catch unhandled requests and forward to error handler.
@@ -28,6 +28,7 @@ app.use((err, req, res, next) => {
   res.json({
     title: err.title || "Server Error",
     message: err.message,
+    errors: err.errors, // Includes our array of validation errors in our JSON response
     stack: isProduction ? null : err.stack,
   });
 });
