@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require("../db/models");
 const { asyncHandler, handleValidationErrors } = require("./utils");
 
-const { Tweet } = db;
+const { Tweet, User } = db;
 const { check, validationResult } = require("express-validator");
 const { requireAuth } = require("../auth");
 
@@ -28,11 +28,13 @@ router.get(
   "/",
   asyncHandler(async (req, res) => {
     // res.json({message:'test tweets index'});
+    console.log("woof");
     const tweets = await Tweet.findAll({
       include: [{ model: User, as: "user", attributes: ["username"] }],
       order: [["createdAt", "DESC"]],
       attributes: ["message"],
     });
+    console.log(tweets);
     res.json({ tweets });
   })
 );

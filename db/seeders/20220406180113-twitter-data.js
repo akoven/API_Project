@@ -22,6 +22,13 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
+        {
+          username: "Downster",
+          email: "downster@gmail.com",
+          hashedPassword: bcrypt.hashSync("SuperDuper"),
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       ],
       { returning: true }
     );

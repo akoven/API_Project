@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { check } = require("express-validator");
-const { User } = require("../db/models");
+const { User, Tweet } = require("../db/models");
 const bcrypt = require("bcryptjs");
 const { getUserToken } = require("../auth");
 const { asyncHandler, handleValidationErrors } = require("./utils");
@@ -64,6 +64,19 @@ router.post(
     }
     const token = getUserToken(user);
     res.json({ token, user: { id: user.id } });
+  })
+);
+
+router.get(
+  "/:id/tweets",
+  asyncHandler(async (req, res) => {
+    const userId = req.params.id;
+    const tweets = await Tweet.findAll({
+      where: {
+        userId,
+      },
+    });
+    res.json({ tweets });
   })
 );
 
