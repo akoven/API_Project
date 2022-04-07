@@ -5,7 +5,7 @@ const { asyncHandler, handleValidationErrors } = require("./utils");
 
 const { Tweet } = db;
 const { check, validationResult } = require("express-validator");
-const{requireAuth} = require('../auth');
+const { requireAuth } = require("../auth");
 
 router.use(requireAuth);
 
@@ -28,7 +28,11 @@ router.get(
   "/",
   asyncHandler(async (req, res) => {
     // res.json({message:'test tweets index'});
-    const tweets = await Tweet.findAll();
+    const tweets = await Tweet.findAll({
+      include: [{ model: User, as: "user", attributes: ["username"] }],
+      order: [["createdAt", "DESC"]],
+      attributes: ["message"],
+    });
     res.json({ tweets });
   })
 );
@@ -53,7 +57,7 @@ router.post(
   handleValidationErrors,
   asyncHandler(async (req, res, next) => {
     const { message } = req.body;
-    await Tweet.create({ message });
+    const tweet = await Tweet.create({ message, userId: req.user.id });
     res.json("Tweet created");
   })
 );
